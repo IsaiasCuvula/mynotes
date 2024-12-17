@@ -1,4 +1,4 @@
-package com.bersyte.mynotes.common.ui.theme
+package com.bersyte.mynotes.common.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -1,4 +1,4 @@
-package com.bersyte.mynotes.common.ui.theme
+package com.bersyte.mynotes.common.theme
 
 import androidx.compose.ui.graphics.Color
 

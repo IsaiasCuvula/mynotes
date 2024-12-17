@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,10 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.bersyte.mynotes.common.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavController
+) {
 
     val config = LocalConfiguration.current
     val screenHeight = config.screenHeightDp
@@ -48,7 +54,8 @@ fun HomeScreen() {
                 ),
                 actions = {
                     IconButton(
-                        onClick = {}
+                        onClick = {
+                        }
                     ) {
                         Icon(
                             Icons.Rounded.Search,
@@ -58,6 +65,19 @@ fun HomeScreen() {
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(Routes.AddNote.name)
+                }
+
+            ) {
+                Icon(
+                    Icons.Rounded.Add,
+                    contentDescription = "Add note button"
+                )
+            }
         }
     ) { innerPadding ->
         LazyColumn(
