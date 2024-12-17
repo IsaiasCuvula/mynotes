@@ -1,9 +1,123 @@
 package com.bersyte.mynotes.features.notes.views
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.bersyte.mynotes.common.components.CommonTextField
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNote() {
+fun AddNote(
+    navigateBack: ()-> Unit
+) {
+    var title by remember { mutableStateOf("") }
+    var note by remember { mutableStateOf("") }
+    val colorScheme = MaterialTheme.colorScheme
 
+    Scaffold(
+       topBar = {
+           CenterAlignedTopAppBar(
+               title = { Text("Create Note") },
+               navigationIcon = {
+                   IconButton(
+                       onClick = navigateBack
+                   ) {
+                       Icon(
+                           imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                           contentDescription = "Navigate Back button",
+                           tint = colorScheme.background
+                       )
+                   }
+               },
+               colors = TopAppBarDefaults.topAppBarColors(
+                   containerColor = colorScheme.primary,
+                   titleContentColor = colorScheme.background,
+               ),
+               actions = {
+                   TextButton(
+                       onClick = {}
+                   ) {
+                       Text(
+                           "Save",
+                           color = colorScheme.background
+                       )
+                   }
+               }
+           )
+       }
+
+    ) { innerPadding ->
+
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .background(
+                    color = colorScheme.onPrimary,
+                    shape = RoundedCornerShape(16.dp)
+                )
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CommonTextField(
+                    value = title,
+                    onValueChange = {value ->
+                        title = value
+                    },
+                    placeholder = {
+                        Text(
+                            "Type note title",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    singleLine = true
+                )
+                CommonTextField(
+                    value = note,
+                    onValueChange = { value ->
+                        note = value
+                    },
+                    placeholder = {
+                        Text(
+                            "Type something...",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = colorScheme.tertiary
+                        )
+                    },
+                )
+            }
+        }
+    }
 
 }
