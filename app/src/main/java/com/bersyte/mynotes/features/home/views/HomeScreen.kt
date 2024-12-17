@@ -55,6 +55,7 @@ fun HomeScreen(
                 actions = {
                     IconButton(
                         onClick = {
+                            navController.navigate(Routes.SearchNote.name)
                         }
                     ) {
                         Icon(
