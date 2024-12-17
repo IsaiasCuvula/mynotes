@@ -66,6 +66,12 @@ dependencies {
     //Date time
     implementation(libs.kotlinx.datetime)
 
+    //ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    //Hilt
+    implementation(libs.androidx.hilt.navigation.fragment)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
