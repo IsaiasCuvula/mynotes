@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class NoteRepository(db: NoteDatabase): INoteRepository {
 
-    private val dao: NoteDao = db.noteDao
+    private val dao: NoteDao = db.noteDao()
 
     override suspend fun getNoteById(id: Int): Flow<Note?> {
         return dao.getNoteById(id)
