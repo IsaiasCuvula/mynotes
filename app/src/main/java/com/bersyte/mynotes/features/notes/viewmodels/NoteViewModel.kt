@@ -1,4 +1,5 @@
 package com.bersyte.mynotes.features.notes.viewmodels
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bersyte.mynotes.features.notes.data.models.Note
@@ -19,6 +20,23 @@ class NoteViewModel  @Inject constructor(
 
     private val _noteState = MutableStateFlow(NoteState())
     val noteState = _noteState.asStateFlow()
+
+    init {
+        getAllNotes()
+    }
+
+    private fun getAllNotes() = viewModelScope.launch {
+        try {
+            repository.getAllNotes().collect{ notes ->
+                _noteState.update { nState -> nState.copy(notes = notes) }
+            }
+        }catch (e: Exception){
+            Log.d("Get all notes", "Error: $e")
+            _noteState.update { it.copy(isLoading = false) }
+            return@launch
+        }
+        _noteState.update { it.copy(isLoading = false) }
+    }
 
     fun saveNote(title: String, note: String) = viewModelScope.launch {
         val newNote = Note(
@@ -41,6 +59,7 @@ class NoteViewModel  @Inject constructor(
 }
 
 data class NoteState(
+    val notes: List<Note>  = emptyList(),
     val error: String? = null,
     val isLoading: Boolean = false
 )

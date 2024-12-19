@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -22,19 +23,30 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bersyte.mynotes.common.navigation.Routes
+import com.bersyte.mynotes.features.notes.data.models.Note
+import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    vm: NoteViewModel = hiltViewModel()
 ) {
+
+    val noteState = vm.noteState.collectAsState()
 
     val config = LocalConfiguration.current
     val screenHeight = config.screenHeightDp
@@ -88,25 +100,37 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            item{
-                Box(
-                    modifier = Modifier
-                        .size(
-                            height = (screenHeight * 0.2).dp,
-                            width = (screenWidth * 0.7).dp
+            if(noteState.value.notes.isEmpty()){
+                item{
+                    Box(
+                        modifier = Modifier
+                            .size(
+                                height = (screenHeight * 0.2).dp,
+                                width = (screenWidth * 0.7).dp
+                            )
+                            .padding(16.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                shape = RoundedCornerShape(16.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "There is no note available!!!",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        .padding(16.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
+                    }
+                }
+            }else{
+                items(noteState.value.notes){ note ->
+
                     Text(
-                        "There is no note available!!!",
+                        note.title,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+
                 }
             }
         }
