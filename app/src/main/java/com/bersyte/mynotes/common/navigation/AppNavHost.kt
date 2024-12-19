@@ -22,9 +22,7 @@ fun AppNavHost(
         modifier = modifier
     ){
         composable(Routes.Home.name) { HomeScreen(navController)}
-        composable(Routes.AddNote.name) { AddNote(navigateBack = {
-            navController.popBackStack()
-        }) }
+        composable(Routes.AddNote.name) { AddNote(navController)}
         composable(Routes.NoteDetails.name) { NoteDetailScreen() }
         composable(Routes.SearchNote.name) { SearchNoteScreen() }
     }

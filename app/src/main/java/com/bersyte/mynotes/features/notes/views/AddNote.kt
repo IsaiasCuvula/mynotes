@@ -32,13 +32,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.bersyte.mynotes.common.components.CommonTextField
+import com.bersyte.mynotes.common.navigation.Routes
 import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNote(
-    navigateBack: ()-> Unit,
+    navController: NavController,
     vm: NoteViewModel = hiltViewModel()
 ) {
     val noteState by vm.noteState.collectAsState()
@@ -53,7 +55,9 @@ fun AddNote(
                 title = { Text("Create note") },
                 navigationIcon = {
                     IconButton(
-                        onClick = navigateBack
+                        onClick = {
+                          navController.popBackStack()
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -76,6 +80,14 @@ fun AddNote(
                                 "Note created successfully ",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            //navigate to home page
+                            navController.navigate(Routes.Home.name){
+                                popUpTo(Routes.Home.name) {
+                                    inclusive = true
+                                }
+                            }
+
                         }
                     ) {
                         Text(
