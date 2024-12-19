@@ -3,12 +3,14 @@ package com.bersyte.mynotes.features.home.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -24,10 +26,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -36,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bersyte.mynotes.common.navigation.Routes
-import com.bersyte.mynotes.features.notes.data.models.Note
 import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
+import com.bersyte.mynotes.features.notes.views.components.NoteCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,22 +45,27 @@ fun HomeScreen(
 ) {
 
     val noteState = vm.noteState.collectAsState()
+    val notes  = noteState.value.notes
 
     val config = LocalConfiguration.current
     val screenHeight = config.screenHeightDp
     val screenWidth = config.screenWidthDp
+    val  colorScheme = MaterialTheme.colorScheme
+
+    val vArrangement =  if(notes.isEmpty()){
+        Arrangement.Center
+    }else{
+        Arrangement.Top
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = {
-                    Text("My Notes")
-
-                },
+                title = {Text("My Notes")},
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.background,
+                    containerColor = colorScheme.primary,
+                    titleContentColor = colorScheme.background,
                 ),
                 actions = {
                     IconButton(
@@ -73,7 +76,7 @@ fun HomeScreen(
                         Icon(
                             Icons.Rounded.Search,
                             contentDescription = "Search note icon button",
-                            tint = MaterialTheme.colorScheme.background
+                            tint = colorScheme.background
                         )
                     }
                 }
@@ -93,45 +96,45 @@ fun HomeScreen(
             }
         }
     ) { innerPadding ->
-        LazyColumn(
+
+        Column(
             modifier = Modifier.padding(innerPadding)
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = vArrangement
         ) {
-            if(noteState.value.notes.isEmpty()){
-                item{
-                    Box(
-                        modifier = Modifier
-                            .size(
-                                height = (screenHeight * 0.2).dp,
-                                width = (screenWidth * 0.7).dp
-                            )
-                            .padding(16.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                shape = RoundedCornerShape(16.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            "There is no note available!!!",
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-            }else{
-                items(noteState.value.notes){ note ->
 
+            if(notes.isEmpty()){
+                Box(
+                    modifier = Modifier
+                        .size(
+                            height = (screenHeight * 0.2).dp,
+                            width = (screenWidth * 0.7).dp
+                        )
+                        .padding(16.dp)
+                        .background(
+                            color = colorScheme.onPrimary,
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
-                        note.title,
+                        "There is no note available!!!",
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-
                 }
+            }else {
+                LazyVerticalStaggeredGrid(
+                    verticalItemSpacing = 4.dp,
+                    columns = StaggeredGridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    content = {
+                        items(notes){ note -> NoteCard(note)}
+                    }
+                )
             }
         }
     }
