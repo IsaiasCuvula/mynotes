@@ -70,7 +70,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     //Hilt
-    implementation(libs.androidx.hilt.navigation.fragment)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
