@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     //KSP & Hilt
-    //id("com.google.devtools.ksp")
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
