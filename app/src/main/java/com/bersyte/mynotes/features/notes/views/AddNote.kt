@@ -31,22 +31,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.bersyte.mynotes.common.components.CommonTextField
-import com.bersyte.mynotes.features.notes.data.models.Note
-import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
-import com.bersyte.mynotes.utils.AppHelper
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNote(
     navigateBack: ()-> Unit,
-    vm: NoteViewModel = hiltViewModel()
+    //vm: NoteViewModel = hiltViewModel()
 ) {
-    val noteState by vm.noteState.collectAsState()
+    //val noteState by vm.noteState.collectAsState()
     var title by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val colorScheme = MaterialTheme.colorScheme
@@ -74,7 +67,7 @@ fun AddNote(
                 actions = {
                     TextButton(
                         onClick = {
-                           vm.saveNote(title, note)
+                           //vm.saveNote(title, note)
 
                             Toast.makeText(
                                 context,
@@ -103,15 +96,15 @@ fun AddNote(
                     shape = RoundedCornerShape(16.dp)
                 )
         ) {
-            if (noteState.isLoading){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator()
-                }
-            }else{
+//            if (noteState.isLoading){
+//                Column(
+//                    modifier = Modifier.fillMaxSize(),
+//                    verticalArrangement = Arrangement.Center,
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    CircularProgressIndicator()
+//                }
+//            }else{
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -142,7 +135,7 @@ fun AddNote(
                             )
                         },
                     )
-                }
+               // }
             }
         }
     }
