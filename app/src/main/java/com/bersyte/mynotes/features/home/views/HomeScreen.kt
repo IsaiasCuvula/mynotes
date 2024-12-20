@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.bersyte.mynotes.common.components.LoadingIndicator
 import com.bersyte.mynotes.common.navigation.Routes
 import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
 import com.bersyte.mynotes.features.notes.views.components.NoteCard
@@ -107,7 +108,7 @@ fun HomeScreen(
         ) {
             when {
                 notesValue.isLoading -> {
-                    CircularProgressIndicator()
+                    LoadingIndicator()
                 }
                 notesValue.error != null -> {
                     Text("Something went wrong \n${noteState.value.error}" )

@@ -19,8 +19,8 @@ class NoteViewModel  @Inject constructor(
 ): ViewModel() {
 
     private val _noteListState = MutableStateFlow(NoteState<List<Note>>())
-    //Ready only - O código fora da ViewModel só pode observar esse estado,
-    // mas não pode modificá-lo
+    //Ready only - The code outside ViewModel can only Observe
+    // the state of this variable, but cannot change it
     val noteListState = _noteListState.asStateFlow()
 
     private val _noteDetailState = MutableStateFlow(NoteState<Note>())
@@ -28,6 +28,7 @@ class NoteViewModel  @Inject constructor(
     val noteDetailState = _noteDetailState.asStateFlow()
 
     init {
+
         getAllNotes()
     }
 
@@ -73,6 +74,8 @@ class NoteViewModel  @Inject constructor(
     }
 
     private fun getAllNotes() = viewModelScope.launch {
+        _noteListState.update { it.copy(isLoading = true) }
+
         try {
             repository.getAllNotes().collect{ notes ->
                 _noteListState.update { nState ->

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bersyte.mynotes.common.components.CommonTextField
+import com.bersyte.mynotes.common.components.LoadingIndicator
 import com.bersyte.mynotes.common.navigation.Routes
 import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
 
@@ -114,13 +115,7 @@ fun AddNote(
                 )
         ) {
             if (noteState.isLoading){
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator()
-                }
+               LoadingIndicator()
             }else{
                 Column(
                     modifier = Modifier.fillMaxSize()
