@@ -1,5 +1,6 @@
 package com.bersyte.mynotes.features.notes.views
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,12 +56,8 @@ fun NoteDetailScreen(
 
     // Calling the method as soon the
     // the user opens the screen
-    LaunchedEffect(noteState) {
+    LaunchedEffect(Unit) {
         vm.getNoteById(noteId)
-
-        //assign initial value
-        title = noteState.value.data?.title ?: ""
-        description = noteState.value.data?.note ?:""
     }
 
     val noteValue = noteState.value
@@ -150,6 +147,12 @@ fun NoteDetailScreen(
 
     ) { innerPadding ->
 
+        Log.d("Details: ", "******************************************************")
+        Log.d("Details: ", "Title: $title - ${noteState.value.data?.title}")
+        Log.d("Details: ", "Desc: $description - ${noteState.value.data?.note}")
+        Log.d("Details: ", "******************************************************")
+
+
         Box(
             modifier = Modifier.fillMaxSize()
                 .padding(innerPadding)
@@ -174,6 +177,10 @@ fun NoteDetailScreen(
                     Text("Something went wrong \n${noteState.value.error}" )
                 }
                 noteValue.data != null -> {
+                    //assign initial value
+                    title = noteState.value.data?.title ?: ""
+                    description = noteState.value.data?.note ?:""
+
                     Column(
                         modifier = Modifier.fillMaxSize()
                     ) {

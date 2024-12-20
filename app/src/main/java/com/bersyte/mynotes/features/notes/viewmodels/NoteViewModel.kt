@@ -42,7 +42,7 @@ class NoteViewModel  @Inject constructor(
                  }
              }
          } catch (e: Exception) {
-             Log.d("Fetch note by id", "Error: $e")
+             Log.d("Fetch note by id", "Fetch note by id error: $e")
              _noteDetailState.update {
                  it.copy(isLoading = false, error = e.message)
              }
@@ -53,7 +53,7 @@ class NoteViewModel  @Inject constructor(
         try {
             repository.updateNote(note)
         }catch (e:Exception){
-            Log.d("Update note", "Error: $e")
+            Log.d("Update note", "Update note error: $e")
             _noteListState.update {
                 it.copy(isLoading = false, error = e.message)
             }
@@ -65,7 +65,7 @@ class NoteViewModel  @Inject constructor(
         try {
             repository.deleteNote(note)
         }catch (e:Exception){
-            Log.d("Delete note", "Error: $e")
+            Log.d("Delete note", "Delete note error: $e")
             _noteListState.update {
                 it.copy(isLoading = false, error = e.message)
             }
@@ -83,7 +83,7 @@ class NoteViewModel  @Inject constructor(
                 }
             }
         }catch (e: Exception){
-            Log.d("Get all notes", "Error: $e")
+            Log.d("Get all notes", "Get all notes error: $e")
             _noteListState.update {
                 it.copy(isLoading = false, error = e.message)
             }
@@ -106,6 +106,7 @@ class NoteViewModel  @Inject constructor(
             _noteListState.update {
                 it.copy(isLoading = false, error = e.message)
             }
+            Log.d("Save note", "Save note error: $e")
             return@launch
         }
         _noteListState.update { it.copy(isLoading = false) }
