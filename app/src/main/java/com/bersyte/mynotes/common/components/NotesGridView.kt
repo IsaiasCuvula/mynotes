@@ -15,7 +15,7 @@ import com.bersyte.mynotes.common.navigation.Routes
 import com.bersyte.mynotes.features.notes.data.models.Note
 
 @Composable
-fun NotesGridView(notes: List<Note>, navController: NavController,) {
+fun NotesGridView(notes: List<Note>, navController: NavController) {
 
     if(notes.isEmpty()){
        Column(

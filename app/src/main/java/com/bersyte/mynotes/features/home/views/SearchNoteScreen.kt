@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -31,7 +32,7 @@ import com.bersyte.mynotes.common.components.LoadingIndicator
 import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
 import com.bersyte.mynotes.common.components.NotesGridView
 import com.bersyte.mynotes.common.components.SearchField
-import java.util.Collections.addAll
+import com.bersyte.mynotes.features.notes.data.models.Note
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,27 +47,19 @@ fun SearchNoteScreen(
 
     var query by remember { mutableStateOf("") }
 
-//    val allNotes = remember {
-//        mutableStateListOf<Note>().apply {
-//            addAll(notes)
-//        }
-//    }
-//
-//    val filteredNotes = if(query.isEmpty()){
-//        allNotes
-//    }else{
-//        allNotes.filter { note ->
-//            note.title.lowercase()
-//                .contains(query.lowercase()) ||
-//                note.description.lowercase()
-//                .contains(query.lowercase())
-//        }
-//    }
+    val allNotes = remember {mutableStateListOf<Note>()}
 
-    val vArrangement =  if(notesValue.data?.isEmpty() == true){
-        Arrangement.Center
+    LaunchedEffect(notesValue) {
+        allNotes.addAll(notesValue.data ?: listOf())
+    }
+
+    val filteredNotes = if(query.isEmpty()){
+        allNotes
     }else{
-        Arrangement.Top
+        allNotes.filter { note ->
+            note.title.lowercase().contains(query.lowercase()) ||
+            note.note.lowercase().contains(query.lowercase())
+        }
     }
 
     Scaffold(
@@ -101,7 +94,6 @@ fun SearchNoteScreen(
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = vArrangement
         ) {
             SearchField(
                 searchQuery = query,
@@ -121,8 +113,7 @@ fun SearchNoteScreen(
                     Text("Something went wrong \n${noteState.value.error}" )
                 }
                 notesValue.data != null -> {
-                    val notes = notesValue.data
-                    NotesGridView(notes, navController)
+                    NotesGridView(filteredNotes, navController)
                 }
             }
 
