@@ -30,7 +30,7 @@ fun AppNavHost(
             }
         }
         composable(Routes.AddNote.name) { AddNote(navController)}
-        composable(Routes.SearchNote.name) { SearchNoteScreen() }
+        composable(Routes.SearchNote.name) { SearchNoteScreen(navController) }
     }
 
 }
