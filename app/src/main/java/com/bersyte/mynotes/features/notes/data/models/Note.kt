@@ -9,8 +9,8 @@ import kotlinx.datetime.LocalDateTime
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val title: String,
-    val note: String,
+    var title: String,
+    var note: String,
     val color: Int,
     val createdAt: LocalDateTime = AppHelper.currentDateTime()
 )
