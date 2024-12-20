@@ -165,6 +165,9 @@ fun NoteDetailScreen(
                     ) {
                         CommonTextField(
                             value = title,
+                            textStyle = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
                             onValueChange = { value ->
                                 title = value
                             },
