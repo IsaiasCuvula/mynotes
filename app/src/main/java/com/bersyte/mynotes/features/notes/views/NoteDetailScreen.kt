@@ -65,8 +65,8 @@ fun NoteDetailScreen(
 
     LaunchedEffect(noteValue) {
         //assign initial value
-        title = noteState.value.data?.title ?: ""
-        description = noteState.value.data?.note ?:""
+        title = noteValue.data?.title ?: ""
+        description = noteValue.data?.note ?:""
     }
 
     val colorScheme = MaterialTheme.colorScheme
