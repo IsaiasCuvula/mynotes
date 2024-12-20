@@ -1,6 +1,5 @@
 package com.bersyte.mynotes.features.notes.views
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.bersyte.mynotes.common.components.ShowAlertDialog
 import com.bersyte.mynotes.common.components.CommonTextField
 import com.bersyte.mynotes.common.navigation.Routes
 import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
@@ -65,6 +66,7 @@ fun NoteDetailScreen(
     val colorScheme = MaterialTheme.colorScheme
     val context = LocalContext.current
 
+    val openAlertDialog = remember {  mutableStateOf(false) }
 
 
     Scaffold(
@@ -90,23 +92,7 @@ fun NoteDetailScreen(
                 ),
                 actions = {
                     IconButton(
-                        onClick = {
-                            //vm.saveNote(title, note)
-
-                            Toast.makeText(
-                                context,
-                                "Note deleted successfully ",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            //navigate to home page
-                            navController.navigate(Routes.Home.name){
-                                popUpTo(Routes.Home.name) {
-                                    inclusive = true
-                                }
-                            }
-
-                        }
+                        onClick = {openAlertDialog.value = true}
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Delete,
@@ -121,22 +107,20 @@ fun NoteDetailScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    //vm.updateNote(title, note)
+                    val oldNote = noteState.value.data
+                    if(oldNote != null){
+                        oldNote.title = title
+                        oldNote.note = description
 
-                    Toast.makeText(
-                        context,
-                        "Note update successfully ",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        vm.updateNote(oldNote)
 
-                    //navigate to home page
-                    navController.navigate(Routes.Home.name){
-                        popUpTo(Routes.Home.name) {
-                            inclusive = true
-                        }
+                        Toast.makeText(
+                            context,
+                            "Note update successfully ",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-
             ) {
                 Icon(
                     Icons.Rounded.Save,
@@ -146,12 +130,6 @@ fun NoteDetailScreen(
         }
 
     ) { innerPadding ->
-
-        Log.d("Details: ", "******************************************************")
-        Log.d("Details: ", "Title: $title - ${noteState.value.data?.title}")
-        Log.d("Details: ", "Desc: $description - ${noteState.value.data?.note}")
-        Log.d("Details: ", "******************************************************")
-
 
         Box(
             modifier = Modifier.fillMaxSize()
@@ -214,6 +192,37 @@ fun NoteDetailScreen(
                     }
 
                 }
+            }
+        }
+
+        if(openAlertDialog.value){
+            val oldNote = noteState.value.data
+            if(oldNote != null){
+
+                ShowAlertDialog(
+                    onDismissRequest = {openAlertDialog.value = false},
+                    onConfirmation = {
+                        vm.deleteNote(oldNote)
+
+                        Toast.makeText(
+                            context,
+                            "Note deleted successfully ",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        //navigate to home page
+                        navController.navigate(Routes.Home.name){
+                            popUpTo(Routes.Home.name) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    title = "Delete Note",
+                    body = "Are you sure you want to delete this note?",
+                    icon = Icons.Rounded.Info,
+                )
+
+
             }
         }
     }
