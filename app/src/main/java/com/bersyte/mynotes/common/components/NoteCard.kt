@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
@@ -33,8 +32,7 @@ fun NoteCard(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = colorScheme.onPrimary)
-                .wrapContentHeight()
-                .padding(16.dp),
+                .padding(16.dp)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(
