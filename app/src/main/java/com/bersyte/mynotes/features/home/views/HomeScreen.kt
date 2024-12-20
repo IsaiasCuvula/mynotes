@@ -1,6 +1,5 @@
 package com.bersyte.mynotes.features.home.views
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -40,11 +39,6 @@ fun HomeScreen(
 
     val  colorScheme = MaterialTheme.colorScheme
 
-    val vArrangement =  if(notesValue.data?.isEmpty() == true){
-        Arrangement.Center
-    }else{
-        Arrangement.Top
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -89,8 +83,7 @@ fun HomeScreen(
             modifier = Modifier.padding(innerPadding)
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = vArrangement
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when {
                 notesValue.isLoading -> {
