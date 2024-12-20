@@ -63,6 +63,12 @@ fun NoteDetailScreen(
 
     val noteValue = noteState.value
 
+    LaunchedEffect(noteValue) {
+        //assign initial value
+        title = noteState.value.data?.title ?: ""
+        description = noteState.value.data?.note ?:""
+    }
+
     val colorScheme = MaterialTheme.colorScheme
     val context = LocalContext.current
 
@@ -140,7 +146,6 @@ fun NoteDetailScreen(
                     shape = RoundedCornerShape(16.dp)
                 )
         ) {
-
             when {
                 noteValue.isLoading -> {
                     Column(
@@ -155,10 +160,6 @@ fun NoteDetailScreen(
                     Text("Something went wrong \n${noteState.value.error}" )
                 }
                 noteValue.data != null -> {
-                    //assign initial value
-                    title = noteState.value.data?.title ?: ""
-                    description = noteState.value.data?.note ?:""
-
                     Column(
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -198,7 +199,6 @@ fun NoteDetailScreen(
         if(openAlertDialog.value){
             val oldNote = noteState.value.data
             if(oldNote != null){
-
                 ShowAlertDialog(
                     onDismissRequest = {openAlertDialog.value = false},
                     onConfirmation = {
@@ -221,8 +221,6 @@ fun NoteDetailScreen(
                     body = "Are you sure you want to delete this note?",
                     icon = Icons.Rounded.Info,
                 )
-
-
             }
         }
     }
