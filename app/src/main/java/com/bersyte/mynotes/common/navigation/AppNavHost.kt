@@ -21,7 +21,12 @@ fun AppNavHost(
         startDestination = Routes.Home.name,
         modifier = modifier
     ){
+
         composable(Routes.Home.name) { HomeScreen(navController)}
+        composable("${Routes.AddNote.name}/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            AddNote(navController, noteId = id)
+        }
         composable(Routes.AddNote.name) { AddNote(navController)}
         composable(Routes.NoteDetails.name) { NoteDetailScreen() }
         composable(Routes.SearchNote.name) { SearchNoteScreen() }

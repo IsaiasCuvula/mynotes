@@ -132,7 +132,13 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier.fillMaxSize(),
                     content = {
-                        items(notes){ note -> NoteCard(note)}
+                        items(notes){ note ->
+                            NoteCard(note, onClick = {
+                                navController.navigate(
+                                   "${Routes.AddNote.name}/${note.id}"
+                                )
+                            })
+                        }
                     }
                 )
             }
