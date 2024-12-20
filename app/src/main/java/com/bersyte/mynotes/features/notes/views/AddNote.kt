@@ -41,13 +41,12 @@ import com.bersyte.mynotes.features.notes.viewmodels.NoteViewModel
 @Composable
 fun AddNote(
     navController: NavController,
-    noteId: String? = null,
     vm: NoteViewModel = hiltViewModel()
 ) {
 
     //val noteToUpdate = ;
 
-    val noteState by vm.noteState.collectAsState()
+    val noteState by vm.noteListState.collectAsState()
     var title by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val colorScheme = MaterialTheme.colorScheme

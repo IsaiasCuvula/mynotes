@@ -18,24 +18,74 @@ class NoteViewModel  @Inject constructor(
     private val repository: NoteRepository
 ): ViewModel() {
 
-    private val _noteState = MutableStateFlow(NoteState())
-    val noteState = _noteState.asStateFlow()
+    private val _noteListState = MutableStateFlow(NoteState<List<Note>>())
+    //Ready only - O código fora da ViewModel só pode observar esse estado,
+    // mas não pode modificá-lo
+    val noteListState = _noteListState.asStateFlow()
+
+    private val _noteDetailState = MutableStateFlow(NoteState<Note>())
+    //Ready only
+    val noteDetailState = _noteDetailState.asStateFlow()
 
     init {
         getAllNotes()
     }
 
+     fun getNoteById(noteId: Int) = viewModelScope.launch {
+         _noteDetailState.update { it.copy(isLoading = true) }
+
+         try {
+             repository.getNoteById(noteId).collect{ note ->
+                 _noteDetailState.update {
+                     it.copy(isLoading = false, data = note)
+                 }
+             }
+         } catch (e: Exception) {
+             Log.d("Fetch note by id", "Error: $e")
+             _noteDetailState.update {
+                 it.copy(isLoading = false, error = e.message)
+             }
+         }
+     }
+
+    fun updateNote(note: Note) = viewModelScope.launch {
+        try {
+            repository.updateNote(note)
+        }catch (e:Exception){
+            Log.d("Update note", "Error: $e")
+            _noteListState.update {
+                it.copy(isLoading = false, error = e.message)
+            }
+            return@launch
+        }
+    }
+
+    fun deleteNote(note: Note)= viewModelScope.launch {
+        try {
+            repository.deleteNote(note)
+        }catch (e:Exception){
+            Log.d("Delete note", "Error: $e")
+            _noteListState.update {
+                it.copy(isLoading = false, error = e.message)
+            }
+            return@launch
+        }
+    }
+
     private fun getAllNotes() = viewModelScope.launch {
         try {
             repository.getAllNotes().collect{ notes ->
-                _noteState.update { nState -> nState.copy(notes = notes) }
+                _noteListState.update { nState ->
+                    nState.copy(data = notes, isLoading = false)
+                }
             }
         }catch (e: Exception){
             Log.d("Get all notes", "Error: $e")
-            _noteState.update { it.copy(isLoading = false) }
+            _noteListState.update {
+                it.copy(isLoading = false, error = e.message)
+            }
             return@launch
         }
-        _noteState.update { it.copy(isLoading = false) }
     }
 
     fun saveNote(title: String, note: String) = viewModelScope.launch {
@@ -46,20 +96,22 @@ class NoteViewModel  @Inject constructor(
             color = AppHelper.generateColor(),
         )
 
-        _noteState.update { it.copy(isLoading = true) }
+        _noteListState.update { it.copy(isLoading = true) }
         try {
             repository.insertNote(newNote)
         }catch (e: Exception){
-            _noteState.update { it.copy(isLoading = false) }
+            _noteListState.update {
+                it.copy(isLoading = false, error = e.message)
+            }
             return@launch
         }
-        _noteState.update { it.copy(isLoading = false) }
+        _noteListState.update { it.copy(isLoading = false) }
     }
 
 }
 
-data class NoteState(
-    val notes: List<Note>  = emptyList(),
+data class NoteState<T>(
+    val data: T? = null,
     val error: String? = null,
     val isLoading: Boolean = false
 )

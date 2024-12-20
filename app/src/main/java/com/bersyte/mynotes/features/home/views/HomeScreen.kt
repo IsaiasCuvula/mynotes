@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -44,15 +45,15 @@ fun HomeScreen(
     vm: NoteViewModel = hiltViewModel()
 ) {
 
-    val noteState = vm.noteState.collectAsState()
-    val notes  = noteState.value.notes
+    val noteState = vm.noteListState.collectAsState()
+    val notesValue = noteState.value
 
     val config = LocalConfiguration.current
     val screenHeight = config.screenHeightDp
     val screenWidth = config.screenWidthDp
     val  colorScheme = MaterialTheme.colorScheme
 
-    val vArrangement =  if(notes.isEmpty()){
+    val vArrangement =  if(notesValue.data?.isEmpty() == true){
         Arrangement.Center
     }else{
         Arrangement.Top
@@ -104,44 +105,56 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = vArrangement
         ) {
-
-            if(notes.isEmpty()){
-                Box(
-                    modifier = Modifier
-                        .size(
-                            height = (screenHeight * 0.2).dp,
-                            width = (screenWidth * 0.7).dp
-                        )
-                        .padding(16.dp)
-                        .background(
-                            color = colorScheme.onPrimary,
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "There is no note available!!!",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+            when {
+                notesValue.isLoading -> {
+                    CircularProgressIndicator()
                 }
-            }else {
-                LazyVerticalStaggeredGrid(
-                    verticalItemSpacing = 4.dp,
-                    columns = StaggeredGridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.fillMaxSize(),
-                    content = {
-                        items(notes){ note ->
-                            NoteCard(note, onClick = {
-                                navController.navigate(
-                                   "${Routes.AddNote.name}/${note.id}"
+                notesValue.error != null -> {
+                    Text("Something went wrong \n${noteState.value.error}" )
+                }
+                notesValue.data !=null -> {
+                    val notes = notesValue.data
+
+                    if(notes.isEmpty()){
+                        Box(
+                            modifier = Modifier
+                                .size(
+                                    height = (screenHeight * 0.2).dp,
+                                    width = (screenWidth * 0.7).dp
                                 )
-                            })
+                                .padding(16.dp)
+                                .background(
+                                    color = colorScheme.onPrimary,
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "There is no note available!!!",
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
                         }
+                    }else {
+                        LazyVerticalStaggeredGrid(
+                            verticalItemSpacing = 4.dp,
+                            columns = StaggeredGridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.fillMaxSize(),
+                            content = {
+                                items(notes){ note ->
+                                    NoteCard(note, onClick = {
+                                        navController.navigate(
+                                            "${Routes.NoteDetails.name}/${note.id}"
+                                        )
+                                    })
+                                }
+                            }
+                        )
                     }
-                )
+                }
             }
+
         }
     }
 }
