@@ -42,8 +42,6 @@ fun AddNote(
     vm: NoteViewModel = hiltViewModel()
 ) {
 
-    //val noteToUpdate = ;
-
     val noteState by vm.noteListState.collectAsState()
     var title by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
